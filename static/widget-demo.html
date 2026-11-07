@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Widget demo – AI RAG Chatbot</title>
+  <style>
+    body { margin: 0; font-family: Georgia, "Times New Roman", serif; color: #222; background: #fffdf8; }
+    .hero { background: #1f2a44; color: #fff; padding: 70px 24px; text-align: center; }
+    .hero h1 { font-size: 40px; margin: 0 0 10px; }
+    .hero p { opacity: .8; font-size: 18px; margin: 0; }
+    main { max-width: 760px; margin: 0 auto; padding: 40px 24px 120px; font-size: 17px; line-height: 1.7; }
+    pre { background: #1d2433; color: #e6e9f0; padding: 16px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; }
+    .tip { background: #fff4d6; border-left: 4px solid #f0b400; padding: 12px 16px; border-radius: 6px; }
+    a { color: #3758f9; }
+  </style>
+</head>
+<body>
+  <section class="hero">
+    <h1>Your Business Website</h1>
+    <p>This page stands in for a client's site. The chat bubble in the corner is the widget.</p>
+  </section>
+  <main>
+    <p class="tip">👉 Click the <strong>chat bubble</strong> in the bottom-right corner and ask a question
+      about the documents in the knowledge base.</p>
+
+    <h2>Add it to any website with one line</h2>
+    <p>Paste this before the closing <code>&lt;/body&gt;</code> tag. It works with WordPress, Shopify,
+      Wix, Webflow, React/Next.js or plain HTML:</p>
+    <pre id="snippet"></pre>
+
+    <h2>Options</h2>
+    <ul>
+      <li><code>data-title</code>: the name shown in the chat header</li>
+      <li><code>data-color</code>: your brand color (hex)</li>
+      <li><code>data-greeting</code>: the first message visitors see</li>
+      <li><code>data-position</code>: <code>right</code> (default) or <code>left</code></li>
+    </ul>
+    <p>The widget uses a Shadow DOM, so your site's CSS can't break it, and it keeps the conversation
+      while visitors move between pages.</p>
+    <p><a href="/">← Back to the full app</a></p>
+  </main>
+
+  <script>
+    document.getElementById("snippet").textContent =
+      `<script src="${location.origin}/widget.js" defer\n` +
+      `        data-title="Site Assistant"\n` +
+      `        data-color="#3758f9"\n` +
+      `        data-greeting="Hi! Ask me anything about our products."><\/script>`;
+  </script>
+  <script src="/widget.js" defer data-color="#1f2a44"
+          data-greeting="Hi! 👋 I answer questions using this site's documents. What would you like to know?"></script>
+</body>
+</html>
