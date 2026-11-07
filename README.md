@@ -8,6 +8,12 @@ It works with **any OpenAI-compatible LLM**, including **free** ones (Google Gem
 
 ---
 
+## 🎬 Demo
+
+The full web app answering with citations and a follow-up question, then the embeddable widget on a sample client website, including an off-topic question it politely declines:
+
+![Demo: cited answers in the web app and the embeddable widget](docs/demo.gif)
+
 ## 📸 Screenshots
 
 **1. Ask a question, get a cited answer.** Answers stream in word by word. The numbered badges link to the exact source, and follow-up questions keep their context:
@@ -174,7 +180,7 @@ Example response from `/chat`:
 
 ## ☁️ Free deployment (Render)
 
-The repo includes a `Dockerfile` and a `render.yaml` blueprint for Render's **free** plan (512 MB RAM). Measured peak memory is about **350 MB**, including re-indexing a 90-chunk website at startup.
+The repo includes a `Dockerfile` and a `render.yaml` blueprint for Render's **free** plan (512 MB RAM). Render asks for a card to verify your identity, but the free instance isn't charged. Measured peak memory is about **350 MB**, including re-indexing a 90-chunk website at startup.
 
 1. In Render, choose **New → Blueprint** and connect this GitHub repo. Render reads `render.yaml`.
 2. Fill in the secret values it asks for: `API_KEY`, `MODEL_NAME`, `ADMIN_TOKEN`, `ALLOWED_ORIGINS`, `SUGGESTIONS`, `CONTACT_URL` and `SEED_URLS` (for example `https://figureshed.com/`). Free instances have no persistent disk, so `SEED_URLS` re-indexes the site automatically after every restart.
