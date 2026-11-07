@@ -1,4 +1,4 @@
-# Works on Hugging Face Spaces (Docker SDK, free CPU), Render, Railway, Fly.io or any VPS.
+# Works on Render (free plan), Railway, Fly.io, Hugging Face Spaces or any VPS.
 FROM python:3.12-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -9,7 +9,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     TRUST_PROXY=true \
     PORT=7860
 
-# Hugging Face Spaces runs containers as user 1000
+# Run as a non-root user (uid 1000)
 RUN useradd -m -u 1000 app
 WORKDIR /app
 

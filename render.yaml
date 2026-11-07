@@ -1,0 +1,29 @@
+# Render Blueprint: free Docker web service (512 MB RAM, sleeps when idle).
+# Secrets marked "sync: false" are typed in the Render dashboard, never committed.
+services:
+  - type: web
+    name: ai-rag-chatbot
+    runtime: docker
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: BASE_URL
+        value: https://generativelanguage.googleapis.com/v1beta/openai/
+      - key: MODEL_NAME
+        sync: false
+      - key: API_KEY
+        sync: false
+      - key: ADMIN_TOKEN
+        sync: false
+      - key: ALLOWED_ORIGINS
+        sync: false
+      - key: SEED_URLS
+        sync: false
+      - key: BOT_NAME
+        value: Site Assistant
+      - key: SUGGESTIONS
+        sync: false
+      - key: CONTACT_URL
+        sync: false
+      - key: TRUST_PROXY
+        value: "true"

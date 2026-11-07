@@ -39,7 +39,7 @@ It works with **any OpenAI-compatible LLM**, including **free** ones (Google Gem
 - **One-line embeddable widget** with a Shadow DOM, so the host site's CSS can't break it. It's mobile friendly, keeps the chat across page loads, and supports brand color, title and greeting options.
 - **Built to run publicly on a free key:** per-IP and daily rate limits, a question length cap, a CORS allow-list and an admin token for anything that changes the knowledge base.
 - **Re-indexing replaces old content** instead of duplicating it. Sources can be deleted one at a time.
-- **Free to run:** local embeddings (fastembed / ONNX, no GPU), a free-tier LLM and a free host (Hugging Face Spaces).
+- **Free to run:** local embeddings (fastembed / ONNX, no GPU), a free-tier LLM and a free host (Render).
 - **60 automated tests** that run offline with no API key.
 
 ## 🛠 Tech stack
@@ -66,7 +66,7 @@ rag-chatbot/
 │   └── widget-demo.html                # "client website" demo page
 ├── scripts/ingest_site.py   # index a site or files from the command line
 ├── tests/                   # 60 tests, offline, no API key needed
-├── Dockerfile               # Hugging Face Spaces / Render / any VPS
+├── Dockerfile, render.yaml  # free Render deploy / any VPS
 └── .env.example
 ```
 
@@ -172,13 +172,15 @@ Example response from `/chat`:
 5. **Relevance gate.** If the best match scores below `MIN_SCORE` (default 0.55), the bot replies "not found" and **the LLM is never called**. Measured on the demo site, on-topic questions score 0.65 to 0.87 and off-topic ones 0.36 to 0.48.
 6. **Generate.** The LLM gets numbered sources and strict instructions to answer only from them and cite `[n]`. The answer streams to the browser, and only the sources it actually cited are shown.
 
-## ☁️ Free deployment (Hugging Face Spaces)
+## ☁️ Free deployment (Render)
 
-1. Create a new Space, choose **Docker**, then push this repo to it. The Space's README needs `sdk: docker` and `app_port: 7860` in its YAML header.
-2. Under **Settings → Variables and secrets**, add `API_KEY`, `BASE_URL`, `MODEL_NAME`, `ADMIN_TOKEN`, `ALLOWED_ORIGINS`, `BOT_NAME` and `SUGGESTIONS`. Add `SEED_URLS` (for example `https://figureshed.com/`) so the site is re-indexed automatically after each restart, because free Spaces have no persistent disk.
-3. Use `https://<user>-<space>.hf.space/widget.js` in the widget snippet.
+The repo includes a `Dockerfile` and a `render.yaml` blueprint for Render's **free** plan (512 MB RAM). Measured peak memory is about **350 MB**, including re-indexing a 90-chunk website at startup.
 
-Free Spaces go to sleep after a period with no visitors. The first message after that takes 30 to 60 seconds, and the widget shows a "waking up" note while it waits.
+1. In Render, choose **New → Blueprint** and connect this GitHub repo. Render reads `render.yaml`.
+2. Fill in the secret values it asks for: `API_KEY`, `MODEL_NAME`, `ADMIN_TOKEN`, `ALLOWED_ORIGINS`, `SUGGESTIONS`, `CONTACT_URL` and `SEED_URLS` (for example `https://figureshed.com/`). Free instances have no persistent disk, so `SEED_URLS` re-indexes the site automatically after every restart.
+3. Use `https://<your-service>.onrender.com/widget.js` in the widget snippet.
+
+Free instances sleep after 15 minutes with no visitors. The first message after that takes about a minute, and the widget shows a "waking up" note while it waits. The same Docker image also runs on Railway, Fly.io or any VPS.
 
 ## 🧪 Tests
 

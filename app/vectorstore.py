@@ -11,7 +11,6 @@ import hashlib
 import logging
 import os
 import threading
-from functools import lru_cache
 from pathlib import Path
 from typing import Protocol
 
@@ -151,8 +150,19 @@ class VectorStore:
         return sorted(grouped.values(), key=lambda s: s.title.lower())
 
 
-@lru_cache
+_store: VectorStore | None = None
+_store_lock = threading.Lock()
+
+
 def get_store() -> VectorStore:
-    settings = get_settings()
-    return VectorStore(settings.data_dir, settings.collection_name,
-                       FastEmbedder(settings.embedding_model))
+    """The shared store, created once. The lock matters: the startup warm-up
+    thread and the first request can call this at the same moment, and without
+    it two embedding models get loaded (double memory, and Chroma errors)."""
+    global _store
+    if _store is None:
+        with _store_lock:
+            if _store is None:
+                settings = get_settings()
+                _store = VectorStore(settings.data_dir, settings.collection_name,
+                                     FastEmbedder(settings.embedding_model))
+    return _store

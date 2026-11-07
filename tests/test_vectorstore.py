@@ -59,3 +59,28 @@ def test_real_embedding_model_understands_meaning(tmp_path):
     assert hits[0].score > 0.6
     assert vs.search("best pizza recipe", k=1)[0].score < 0.55  # off-topic stays below MIN_SCORE
     assert hits[0].source == "https://s.test/hp"
+
+
+def test_get_store_is_created_once_under_concurrency(monkeypatch):
+    import threading
+    import time
+
+    from app import vectorstore
+
+    created = []
+
+    class SlowStore:
+        def __init__(self, *args):
+            time.sleep(0.2)  # like loading the embedding model
+            created.append(self)
+
+    monkeypatch.setattr(vectorstore, "_store", None)
+    monkeypatch.setattr(vectorstore, "VectorStore", SlowStore)
+    monkeypatch.setattr(vectorstore, "FastEmbedder", lambda name: None)
+    results = []
+    threads = [threading.Thread(target=lambda: results.append(vectorstore.get_store())) for _ in range(5)]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+    assert len(created) == 1 and all(r is created[0] for r in results)
